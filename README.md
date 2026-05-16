@@ -4,6 +4,8 @@
 
 To investigate whether **3D modal analysis** (using both mode shapes and natural frequencies) can be used to detect defects in manufactured parts by comparing a **normal model** against a **defect model**.
 
+The analysis results have to be compared with a real "ping-like" test done on a real workpiece with and without defect, for test data correlation. This part is not under the scope of this investigation.
+
 - **Tool:** FEniCSx + Python + Viewing in Paraview + Jupyter Notebook
 - **Defects:** Surface or sub-surface  
 - **Application:** Quick "ping-like" screening in production line  
@@ -98,7 +100,7 @@ Based on classical formulations from:
 
 ---
 
-## Modal Analysis
+## Modal Analysis and Results
 
 - Solver: SLEPc eigenvalue solver  
 - Problem type: **Generalized Hermitian Eigenvalue Problem (GHEP)**  
@@ -108,17 +110,28 @@ Outputs:
 - Natural frequencies  
 - Mode shapes  
 
-![Mode Shape](images/mode_shape.png)
+![Mode Shape](images/3d-bar-end-fixed-mod-analy_7th-mode-compare.png)
 
-*Change in **Mode Shapes** used to detect distortion due to defects.*
+***Mode Shapes** used to detect distortion due to defects.*
+*7th mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
 
----
+As expected, we can clearly see that the large defect causes significant frequency shifts (reductions), and distortions in mode shapes. This indicates that the method, for now atleast, works for large defects. We need to further test the method on smaller defects, different orientations, sub-surface defects, etc. 
 
-## Results
+![Mode Shape](images/3d-bar-end-fixed-mod-analy_1st-mode-compare.png)
+*1st mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
 
-sdfgs
-fsdfs
+![Mode Shape](images/3d-bar-end-fixed-mod-analy_3rd-mode-compare.png)
+*3rd mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
 
+![Mode Shape](images/3d-bar-end-fixed-mod-analy_4th-mode-compare-torsion.png)
+*4th mode shape, torsion, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
+
+![Mode Shape](images/orient-zoom-script_how-to-run.png)
+
+*orient-zoom-script.py - How to run this Paraview script. Script is included in the uploaded Jupyter Notebook code files folders.*
+
+This script will zoom and orient all Paraview viewports (RenderView); run the script, one by one in each viewport.
+Comparing result views in same zoom and orientation is Aviation industry standard for all reporting/documentations. This is absolutely necessary, hence the script is included.
 
 ---
 
@@ -147,9 +160,7 @@ Analytical reference (Euler–Bernoulli beam theory):
 - Finite thickness effects  
 - Mesh resolution (3 elements through thickness; 5 elements can be tried too)  
 
----
-
-## Numerical Notes
+### Numerical Notes
 
 - ~0.159 Hz modes -> numerical artifacts (rigid-body-like)  
 - These are ignored in interpretation  
@@ -162,12 +173,13 @@ Analytical reference (Euler–Bernoulli beam theory):
 - Correct stiffness and mass formulation  
 - Proper boundary conditions  
 - Reliable modal predictions  
+- In defect model, frequency shifts (reduction) and mode shapes distortion observed, thereby showing that the method is capable of detecting large surface defects. Need to further test on smaller defects.
 
 ---
 
 ## Future Work
 
-- Improve defect detection sensitivity
+- Improve defect detection sensitivity; test the method on smaller defects
 - Try with 2nd order elements (see if stiffness and frequency reduces and matches more with analytical values)
 - Quantify minimum detectable defect size
 - Extend work to strength, fatigue, fracture (LEFM), and creep (dwell effects), impact analyses 
