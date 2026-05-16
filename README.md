@@ -8,7 +8,7 @@ The analysis results have to be compared with a real "ping-like" test done on a 
 
 - **Tool:** FEniCSx + Python + Viewing in Paraview + Jupyter Notebook
 - **Defects:** Surface or sub-surface  
-- **Application:** Quick "ping-like" screening in production line  
+- **Application:** Quick "ping-like" screening in production line for gas turbine blades, aero fan blades, or any slender critical component
 
 Further detailed NDT methods (liquid penetrant, radiography, eddy current) can be used for confirmation.
 
@@ -115,22 +115,28 @@ Outputs:
 ***Mode Shapes** used to detect distortion due to defects.*
 *7th mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
 
-As expected, we can clearly see that the large defect causes significant frequency shifts (reductions), and distortions in mode shapes. This indicates that the method, for now atleast, works for large defects. We need to further test the method on smaller defects, different orientations, sub-surface defects, etc. 
+As expected, we can clearly see that the large defect causes significant frequency shifts (reductions), and distortions in mode shapes (note the fringe color plot changes). Note the bigger red or magenta band in the middle of the defect model on right (the band is exactly at the weaker defect region, as expected).
+
+This indicates that the method, for now atleast, works for large defects. We need to further test the method on smaller defects, different orientations, sub-surface defects, etc. 
 
 ![Mode Shape](images/3d-bar-end-fixed-mod-analy_1st-mode-compare.png)
-*1st mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
+*1st mode shape, bending, normal 2.80 Hz (above left), defect 2.69 Hz (above right).*
 
 ![Mode Shape](images/3d-bar-end-fixed-mod-analy_3rd-mode-compare.png)
-*3rd mode shape, bending, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
+*3rd mode shape, bending, normal 22.95 Hz (above left), defect 22.68 Hz (above right).*
+
+From the lower modes we can see that, it is not very helpful in differentiating the effects of the defect. The mode shape fringe plots for the lower modes are quite similar. Hence, we need mode shape plots of higher modes. Extract atleast first 10 modes.
 
 ![Mode Shape](images/3d-bar-end-fixed-mod-analy_4th-mode-compare-torsion.png)
-*4th mode shape, torsion, normal 96.04 Hz (above left), defect 90.64 Hz (above right).*
+*4th mode shape, torsion, normal 27.44 Hz (above left), defect 25.24 Hz (above right).*
+
+This is the first torsion mode. This shows clearly the effect of the defect. Note the bigger blue band in the middle of the defect model on right.
 
 ![Mode Shape](images/orient-zoom-script_how-to-run.png)
 
 *orient-zoom-script.py - How to run this Paraview script. Script is included in the uploaded Jupyter Notebook code files folders.*
 
-This script will zoom and orient all Paraview viewports (RenderView); run the script, one by one in each viewport.
+This script will zoom and orient all Paraview viewports (RenderView) in the same manner for easy comparison; run the script, one by one in each viewport.
 Comparing result views in same zoom and orientation is Aviation industry standard for all reporting/documentations. This is absolutely necessary, hence the script is included.
 
 ---
