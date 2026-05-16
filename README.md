@@ -20,14 +20,17 @@ This work represents a **simple initial exploration**:
   - Establish **sensitivity limits**  
   - Improve robustness for real-world use  
 
-**Goal:** Evaluate whether modal analysis can serve as a fast global screening tool.
+### Engineering Intent
+
+The goal is **not a production-ready solution**, but to evaluate:
+- Whether modal analysis can serve as a fast, global screening tool for defect detection.
 
 ---
 
 ## Problem Setup
 
 - 3D cantilever beam (clamped at one end)  
-- Undamped, linear, free vibration (modal analysis)  
+- Undamped, linear, free vibration (modal analysis), but not free-free modal analysis  
 - Full 3D solid model (not a beam approximation)  
 - First order elements used
 - Material is linear (modal analysis assumes linear elasticity)
@@ -41,8 +44,6 @@ Where:
 - `M` = mass matrix  
 - `λ` = eigenvalue (related to frequency)  
 - `u` = eigenvector (mode shape)  
-
----
 
 ### Geometry and Mesh
 
@@ -80,7 +81,7 @@ Where:
 
 ### Boundary Condition
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**u = 0 (on clamped boundary)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**u = 0 (on clamped boundary; Dirichlet Boundary Condition)**
 
 ---
 
@@ -109,7 +110,7 @@ Outputs:
 
 ![Mode Shape](images/mode_shape.png)
 
-*Mode shapes used to detect distortion due to defects.*
+*Change in Mode shapes used to detect distortion due to defects.*
 
 ---
 
@@ -168,9 +169,9 @@ Analytical reference (Euler–Bernoulli beam theory):
 
 - Improve defect detection sensitivity
 - Try with 2nd order elements (see if stiffness and frequency reduces and matches more with analytical values)
-- Quantify minimum detectable defect size  
-- Introduce damping effects  
-- Extend to fatigue, fracture, and creep analysis  
+- Quantify minimum detectable defect size
+- Extend work to strength, fatigue, fracture (LEFM), and creep (dwell effects), impact analyses 
+- Introduce damping effects, to see how the vibration dies out over time. The vibration die out signature may be helpful in fine tuning the defect detection. This damping effect may help in increasing the detection sensitivity.
 
 ---
 
