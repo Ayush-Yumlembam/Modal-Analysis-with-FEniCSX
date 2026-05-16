@@ -29,6 +29,21 @@ The goal is **not a production-ready solution**, but to evaluate:
 
 ---
 
+## Software Versions
+
+FEniCSX Container based on Windows 11 + Docker (installed in Windows 11) + WSL2-Ubuntu integration
+
+- Windows 11 Pro 25H2 26200.8457
+- WSL2
+- Docker version 29.3.1, build c2be9cc
+- Paraview 5.13.2
+- FEniCSX
+  - dolfinx: 0.10.0.post2
+  - basix: 0.10.0
+  - ufl: 2025.2.0.post0
+
+---
+
 ## Problem Setup
 
 - 3D cantilever beam (clamped at one end)  
@@ -137,7 +152,10 @@ This is the first torsion mode. This shows clearly the effect of the defect. Not
 *orient-zoom-script.py - How to run this Paraview script. Script is included in the uploaded Jupyter Notebook code files folders.*
 
 This script will zoom and orient all Paraview viewports (RenderView) in the same manner for easy comparison; run the script, one by one in each viewport.
-Comparing result views in same zoom and orientation is Aviation industry standard for all reporting/documentations. This is absolutely necessary, hence the script is included.
+The scaling of the plots is not included in the script; scaling to be done manually. For easy comparison, keep the plot scales same.
+
+Comparing result views in same zoom and orientation is Aviation industry standard for all reporting/documentations. This is absolutely necessary, hence the script is included. 
+Plot scales, Color map/values/limits should also be the same.
 
 ---
 
