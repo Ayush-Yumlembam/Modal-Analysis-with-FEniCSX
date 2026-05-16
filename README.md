@@ -110,7 +110,7 @@ Outputs:
 
 ![Mode Shape](images/mode_shape.png)
 
-*Change in Mode shapes used to detect distortion due to defects.*
+*Change in **Mode Shapes** used to detect distortion due to defects.*
 
 ---
 
