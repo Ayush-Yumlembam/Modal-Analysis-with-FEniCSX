@@ -1,12 +1,19 @@
-# Modal-Analysis-with-FenicsX
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>3D Modal Analysis for Defect Detection</title>
 
-<!-- MathJax for LaTeX rendering -->
+<!-- MathJax Config -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <style>
@@ -28,6 +35,11 @@ code {
     border-left: 5px solid #3498db;
     margin: 20px 0;
 }
+img {
+    max-width: 100%;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+}
 </style>
 </head>
 
@@ -35,198 +47,195 @@ code {
 
 <h1>3D Modal Analysis for Defect Detection</h1>
 
-<h2>🎯 Aim</h2>
+<h2>Aim</h2>
+
 <p>
-To investigate whether <b>3D modal analysis</b> (using both mode shapes and natural frequencies) 
-can be used to detect defects in manufactured parts by comparing a <b>normal model</b> 
+To investigate whether <b>3D modal analysis</b> (using both mode shapes and natural frequencies)
+can be used to detect defects in manufactured parts by comparing a <b>normal model</b>
 against a <b>defect model</b>.
 </p>
 
 <ul>
-<li>Tool: <b>FEniCSx + Python</b></li>
+<li>Tool: FEniCSx + Python</li>
 <li>Defects: Surface or sub-surface</li>
-<li>Application: Quick “ping-like” screening in production line</li>
+<li>Application: Quick "ping-like" screening in production line</li>
 </ul>
 
 <p>
 Further detailed NDT methods (liquid penetrant, radiography, eddy current) can be used for confirmation.
 </p>
 
+<h3>Scope and Current Status</h3>
+<ul>
+<li>This work represents a <b>simple, initial exploration</b> of the concept.</li>
+<li>The current model is a <b>first iteration</b> and requires refinement.</li>
+<li>Further work needed to:
+  <ul>
+    <li>Determine smallest detectable defect size</li>
+    <li>Establish sensitivity limits</li>
+    <li>Improve robustness</li>
+  </ul>
+</li>
+</ul>
+
 <hr>
 
-<h2>⚙️ Problem Setup</h2>
+<h3>Engineering Intent</h3>
+<ul>
+<li>The goal is <b>not a production-ready solution</b>, but to evaluate:</li>
+  <ul>
+    <li>Whether modal analysis can serve as a fast, global screening tool for defect detection.</li>
+  </ul>
+</li>
+</ul>
+
+<hr>
+
+<h2>Problem Setup</h2>
 
 <ul>
 <li>3D cantilever beam (clamped at one end)</li>
 <li>Undamped, linear, free vibration (modal analysis)</li>
-<li>Full 3D solid model (not beam approximation)</li>
+<li>Full 3D solid model (not a beam approximation)</li>
 </ul>
 
 <div class="box">
 <b>Governing equation:</b><br>
-\[
+$$
 K u = \lambda M u
-\]
+$$
 </div>
 
 <ul>
-<li>\(K\): stiffness matrix</li>
-<li>\(M\): mass matrix</li>
-<li>\(\lambda\): eigenvalue</li>
-<li>\(u\): eigenvector (mode shape)</li>
+<li>K: stiffness matrix</li>
+<li>M: mass matrix</li>
+<li>λ: eigenvalue (frequency)</li>
+<li>u: eigenvector (mode shape)</li>
 </ul>
 
----
+<img src="images/geometry.png" alt="Geometry and mesh">
 
-<h2>🧨 Defect Modeling</h2>
+<p><b>Explanation:</b> Structured 3D mesh with a thin geometry. The beam is clamped at one end.</p>
+
+<hr>
+
+<h2>Defect Modeling</h2>
 
 <ul>
 <li>Defect simulated by removing elements</li>
-<li>Represents cracks, porosity, or material loss</li>
+<li>Represents local stiffness loss</li>
 </ul>
 
-<p><b>Physical effects:</b></p>
+<p><b>Effect of defect:</b></p>
 <ul>
-<li>Reduced stiffness locally</li>
+<li>Reduction in stiffness</li>
 <li>Lower natural frequencies</li>
 <li>Distortion in mode shapes (primary indicator)</li>
 </ul>
 
----
+<img src="images/defect.png" alt="Defect region">
 
-<h2>🧠 Weak Formulation</h2>
+<hr>
+
+<h2>Weak Formulation</h2>
 
 <div class="box">
-\[
+$$
 \int_{\Omega} \sigma(u) : \varepsilon(v)\, dx
-\]
+$$
 </div>
 
 <p><b>Strain tensor:</b></p>
-\[
+$$
 \varepsilon(u) = \frac{1}{2}(\nabla u + \nabla u^T)
-\]
+$$
 
-<p><b>Stress tensor (Hooke’s Law, isotropic):</b></p>
-\[
+<p><b>Stress tensor (Hooke's Law):</b></p>
+$$
 \sigma(u) = \lambda \, \text{tr}(\varepsilon(u)) I + 2\mu \varepsilon(u)
-\]
+$$
 
----
+<hr>
 
-<h2>🔒 Boundary Condition</h2>
+<h2>Boundary Condition</h2>
 
 <div class="box">
-\[
+$$
 u = 0 \quad \text{on the clamped boundary}
-\]
+$$
 </div>
 
----
+<hr>
 
-<h2>📊 Modal Analysis Details</h2>
+<h2>Modal Analysis</h2>
 
 <ul>
 <li>Eigenvalue solver: SLEPc</li>
 <li>Problem type: Generalized Hermitian Eigenvalue Problem (GHEP)</li>
-<li>Valid for undamped systems</li>
-<li>Outputs: Frequencies + Mode shapes</li>
+<li>Undamped system</li>
+<li>Outputs: Frequencies and mode shapes</li>
 </ul>
 
----
+<img src="images/mode_shape.png" alt="Mode shape">
 
-<h2>⚠️ Numerical Notes</h2>
+<p><b>Explanation:</b> Mode shapes are used to identify distortions caused by defects.</p>
 
-<ul>
-<li>~0.159 Hz modes → numerical rigid-body artifacts</li>
-<li>Ignored in interpretation</li>
-<li>3 elements through thickness → thin structure</li>
-</ul>
+<hr>
 
----
-
-<h2>📈 Validation with Beam Theory</h2>
+<h2>Validation</h2>
 
 <p>Analytical reference (Euler–Bernoulli beam):</p>
 
 <div class="box">
-\[
+$$
 f_n = \frac{\beta_n^2}{2\pi L^2} \sqrt{\frac{EI}{\rho A}}
-\]
+$$
 </div>
 
-<p><b>Observation:</b></p>
 <ul>
-<li>~15–25% deviation from theory</li>
+<li>Observed deviation: ~15–25%</li>
 <li>FEM predicts slightly higher frequencies</li>
 </ul>
 
----
-
-<h2>❗ Reason for Differences</h2>
-
+<p><b>Reason:</b></p>
 <ul>
-<li>3D solid model vs 1D beam theory</li>
-<li>Shear deformation included in FEM</li>
+<li>3D model vs 1D beam theory</li>
+<li>Shear deformation included</li>
 <li>Finite thickness effects</li>
-<li>Mesh resolution limitations</li>
+<li>Mesh resolution</li>
 </ul>
 
----
+<hr>
 
-<h2>📌 Key Modeling Assumptions</h2>
+<h2>Numerical Notes</h2>
 
 <ul>
-<li>3D linear elasticity</li>
-<li>Small strain formulation</li>
-<li>Isotropic material</li>
-<li>No damping</li>
+<li>~0.159 Hz modes are numerical artifacts</li>
+<li>These are ignored in interpretation</li>
 </ul>
 
-<p>
-Based on classical formulations from:
-<ul>
-<li>Timoshenko & Goodier – <i>Theory of Elasticity</i></li>
-<li>Zienkiewicz – <i>Finite Element Method</i></li>
-</ul>
-</p>
+<hr>
 
----
-
-<h2>🧪 Interpretation for Defect Detection</h2>
-
-<ul>
-<li>Frequency shift → global stiffness change</li>
-<li>Mode shape distortion → local defect indicator</li>
-</ul>
-
-<p>
-Primary focus: <b>mode shape distortion</b>
-</p>
-
----
-
-<h2>🚀 Future Work</h2>
-
-<ul>
-<li>Include damping (decay signature analysis)</li>
-<li>Fracture mechanics (LEFM)</li>
-<li>Fatigue and creep analysis</li>
-<li>Impact and dynamic loading</li>
-</ul>
-
----
-
-<h2>✅ Conclusion</h2>
+<h2>Conclusion</h2>
 
 <div class="box">
-FEM results show good agreement with theory, validating:
 <ul>
-<li>✔ Correct stiffness and mass formulation</li>
-<li>✔ Proper boundary conditions</li>
-<li>✔ Reliable modal predictions</li>
+<li>FEM results agree reasonably with theory</li>
+<li>Correct stiffness and mass formulation</li>
+<li>Proper boundary conditions</li>
+<li>Reliable modal predictions</li>
 </ul>
 </div>
+
+<hr>
+
+<h2>Future Work</h2>
+
+<ul>
+<li>Refine defect detection sensitivity</li>
+<li>Introduce damping effects</li>
+<li>Extend to fracture and fatigue analysis</li>
+</ul>
 
 </body>
 </html>
